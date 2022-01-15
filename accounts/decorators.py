@@ -13,10 +13,7 @@ def unauthenticated_user(view_func):
 def allowed_users(roles = []):
 	def decorator(view_func):
 		def wrapper_func(req, *args, **kwargs):
-			# print('working',roles)
-			group = None
-			if req.user.groups.exists():
-				group = req.user.groups.all()[0].name
+			group = req.user.groups.all()[0].name if req.user.groups.exists() else None
 			if group in roles:
 				return view_func(req, *args, **kwargs)
 			else:
@@ -26,10 +23,7 @@ def allowed_users(roles = []):
 
 def admin_only(view_func):
 	def wrapper_func(req, *args, **kwargs):
-		# print('working',roles)
-		group = None
-		if req.user.groups.exists():
-			group = req.user.groups.all()[0].name
+		group = req.user.groups.all()[0].name if req.user.groups.exists() else None
 		if group in 'customer':
 			return redirect('user_account')
 		if group in 'admin':
